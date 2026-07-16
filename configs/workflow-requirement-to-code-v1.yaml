@@ -400,11 +400,45 @@ workflow:
       maxSelfTransitions: 5
 
     - name: 完成
-      description: 确认实施评审已经通过，并以只读步骤结果完成本次工作流。
+      description: 生成开发者可复核的代码变更报告，确认实施评审已经通过，并以只读步骤结果完成本次工作流。
       type: normal
       requireHumanApproval: false
       enableSpecRevisionOnComplete: false
       steps:
+        - name: 代码变更报告
+          agent: csi-code-change-reporter
+          task: |-
+            ## 目标
+
+            基于已通过实施评审的最终证据，生成开发者可复核的代码变更报告。
+
+            ## 正式输入
+
+            - `raw_ar`: `context.requirements`
+            - `project_root`: `context.projectRoot`
+            - `run_id`: ACEHarness `runId`
+            - `specs/<AR-ID>/design/clarification.md`
+            - `specs/<AR-ID>/design/design.md`
+            - `specs/<AR-ID>/design/plan.md`
+            - `specs/<AR-ID>/design/task.md`
+            - `specs/<AR-ID>/design/design-review.md`
+            - `specs/<AR-ID>/dt/dt-cases.md`
+            - `specs/<AR-ID>/dt/dt-test-code-summary.md`
+            - `specs/<AR-ID>/dt/dt-baseline-report.md`
+            - `specs/<AR-ID>/dt/dt-quality-review.md`
+            - `specs/<AR-ID>/implementation/implementation-summary.md`
+            - `specs/<AR-ID>/implementation/dt-test-report-post.md`
+            - `specs/<AR-ID>/implementation/code-review.md`
+            - `specs/<AR-ID>/implementation/implementation-review.md`
+            - 项目实际文件状态、代码 diff 和验证命令输出
+
+            ## 正式输出
+
+            - `specs/<AR-ID>/implementation/code-change-report.md`
+            - ACEHarness 标准 JSON：报告 `status: ready` 时返回 `{"verdict":"pass","summary":"<报告摘要>"}`；报告 `status: blocked` 或文件无法写入/读取时返回 `{"verdict":"fail","summary":"<阻塞原因>"}`
+
+            报告必须先写入并重新读取确认。证据缺口写入报告的待复核项，不把缺失证据表述为已通过；实施评审、实施后 DT 或代码审查证据缺失/冲突时将报告标记为 `blocked`。
+
         - name: 完成确认
           agent: csi-workflow-completer
           task: |-
@@ -417,6 +451,7 @@ workflow:
             - `specs/<AR-ID>/implementation/implementation-review.md`
             - `specs/<AR-ID>/implementation/dt-test-report-post.md`
             - `specs/<AR-ID>/implementation/code-review.md`
+            - `specs/<AR-ID>/implementation/code-change-report.md`
 
             ## 正式输出
 
