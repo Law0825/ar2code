@@ -1,0 +1,19 @@
+skills/csi-code-review/SKILL.md
+  s_4b33b317f60b41::t_0b1376b5559958 129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "76aeb89a08a10055740892265149732eeb2c7c16",
+  "prompts": {},
+  "sessions": {
+    "s_4b33b317f60b41": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_095c2993bffeUd3X3SwwNC9j2x",
+        "model": "gpt-5.4"
+      },
+      "human_author": "陈家颖 <law@chenjiayingdeMacBook-Pro.local>"
+    }
+  }
+}
