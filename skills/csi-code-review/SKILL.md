@@ -126,4 +126,4 @@ updated_at: <ISO-8601>
 ---
 ```
 
-正文包含基线与 diff evidence、`pre_existing` 归因、Changed Files 围栏矩阵、一次性例外核验、六维结论、findings、已解决项和证据限制。没有问题时明确记录未发现有证据的问题。
+正文包含基线与 diff evidence、`pre_existing` 归因、Changed Files 围栏矩阵、一次性例外核验、七轴结论、findings、已解决项和证据限制。没有问题时明确记录未发现有证据的问题。
