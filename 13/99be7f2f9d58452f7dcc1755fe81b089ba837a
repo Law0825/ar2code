@@ -1,0 +1,26 @@
+skills/csi-dt-quality-review/SKILL.md
+  s_4b33b317f60b41::t_16f98decd571cc 26-46
+skills/csi-sdd-review/SKILL.md
+  s_4b33b317f60b41::t_16f98decd571cc 28-51
+skills/csi-implementation-review/SKILL.md
+  s_4b33b317f60b41::t_16f98decd571cc 27-53,62-69
+  s_4b33b317f60b41::t_f7f7ca2ea6e33a 70
+skills/csi-code-review/SKILL.md
+  s_4b33b317f60b41::t_16f98decd571cc 52-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.14",
+  "base_commit_sha": "1399be7f2f9d58452f7dcc1755fe81b089ba837a",
+  "prompts": {},
+  "sessions": {
+    "s_4b33b317f60b41": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_095c2993bffeUd3X3SwwNC9j2x",
+        "model": "gpt-5.4"
+      },
+      "human_author": "陈家颖 <law@chenjiayingdeMacBook-Pro.local>"
+    }
+  }
+}
