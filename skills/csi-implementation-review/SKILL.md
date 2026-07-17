@@ -24,6 +24,33 @@ metadata:
 8. 核对 blocking/major code review findings 的处理状态，以及差异证据足以独立判断本次变更范围与归因；
 9. 核对迁移、兼容、回滚和正式验收义务已经落实。
 
+### Gate 迭代规则
+
+实施评审按照门禁方式运行，而不是单次打分：
+
+- `pass`：当前版本已满足准入条件，可进入只读完成状态；
+- `conditional_pass`：当前版本可推进，但存在可由当前实现阶段修复的缺口，需要回流同阶段补证据或收敛变更；
+- `fail`：问题属于 design / dt / requirement 上游职责，不能在本评审内硬判通过。
+
+门禁执行规则：
+
+- 单轮评审超过 2 次仍有未闭合问题时，暂停并请求用户决策；
+- 多个产物同时不满足时，按照最坏结果原则路由；
+- `owner=implementation` 与 `owner=environment` 的问题允许在有限重试内修复或补证据后复审；
+- `owner=dt | design | requirement` 的问题必须回流对应职责，不得在实施评审内消解。
+
+### 端到端覆盖自检
+
+在给出最终 verdict 前，先显式确认以下矩阵已覆盖：
+
+- AR / clarification
+- design / plan / task
+- DT Case / test code / baseline / post-run
+- implementation-summary / code-review
+- implementation-review
+
+若任一环节缺失或版本链不一致，不能给 `pass`，最多给 `conditional_pass` 或 `fail`。
+
 ## 裁决语义
 
 - `pass`：任务完成、目标 DT 与必要回归为 Green、变更为围栏合规或当前运行有效的一次性例外、差异证据充分、blocking/major findings 已解决、端到端追踪完整；
@@ -31,6 +58,15 @@ metadata:
 - `fail`：测试资产、系统设计或需求基线需要上游职责修订。
 
 每个未关闭问题包含 ID、来源、证据、owner、修复条件和阻塞影响。`owner=implementation` 对应 `conditional_pass`；`owner=dt | design | requirement` 对应 `fail`。
+
+红牌信号：
+
+- 只看了结果，没有核对版本链；
+- 只有口头“已处理”，没有差异或回归证据；
+- `test_status` 不是 green 却试图给 pass；
+- `code-review` 的 blocking / major 仍未闭合；
+- 一次性例外跨越运行、超范围或改变契约；
+- 端到端追踪矩阵存在断点。
 
 一次性例外缺少有效授权、超出精确范围、跨越当前运行，或实际影响行为、契约、任务/验收、DT Case 或测试基线时，不具备准入效力；按问题来源分别回到 `implementation`、`design`、`requirement` 或 `dt`。
 

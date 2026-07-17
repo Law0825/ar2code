@@ -49,6 +49,52 @@ Git 项目以记录的基线提交和当前工作树为两端，综合检查基�
 
 审查深度服从风险与改动规模。修订轮次以最新 diff 和未关闭 finding 为主，复核修复是否引入新问题。
 
+### 4. 轴化审查与覆盖自检
+
+对每个进入审查范围的文件，按适用性逐项执行以下审查轴，并在结束前完成覆盖自检矩阵：
+
+- `correctness`：功能是否真的按契约执行；
+- `boundary`：边界、错误路径、状态转换是否完整；
+- `security`：权限、信任边界、敏感数据是否安全；
+- `performance`：复杂度、I/O、资源释放是否合理；
+- `maintainability`：命名、结构、可读性、抽象是否可维护；
+- `testing`：测试是否真实约束行为，是否存在弱 Oracle；
+- `fence`：围栏、任务授权、实现范围是否一致。
+
+覆盖自检矩阵格式如下：
+
+```text
+                | correctness | boundary | security | performance | maintainability | testing | fence
+fileA           |      ✓      |    ✓     |    n/a   |      ✓      |       ✓         |   ✓     |  ✓
+fileB           |      ✓      |    ✓     |    ✓     |      n/a    |       ✓         |   ✓     |  ✓
+...
+```
+
+规则：
+
+- 每个相关文件必须被主动读过；
+- 每个适用轴必须显式审查，不得靠印象跳过；
+- `n/a` 只允许用于确实不适用的轴，并写明简短原因；
+- 结束前若存在未完成的 `✗`，不得进入最终裁决。
+
+### 5. 发现与裁决约束
+
+输出 findings 时遵循以下约束：
+
+- 每条 finding 必须同时具备 claim、evidence、impact 和 recommendation；
+- 每条 finding 需要明确 owner，避免把 testing / dt / design 问题混归 implementation；
+- `confidence` 低于 70 的发现可以保留在审查记录中，但最终对外结论必须说明其置信度；
+- 若命中红牌信号，禁止以“总体感觉不错”覆盖问题，必须写明阻塞原因或修复建议。
+
+红牌信号包括：
+
+- 没有看真实 diff 只看摘要；
+- findings 没有证据；
+- 把测试资产缺陷归因到实现；
+- 把设计/围栏缺口当成普通代码缺陷；
+- 关键变更文件没有进入覆盖矩阵；
+- 只给结论，不给可复核理由。
+
 ## Finding 契约
 
 每项 finding 包含：
